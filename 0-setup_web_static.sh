@@ -1,23 +1,44 @@
 #!/usr/bin/env bash
-# script that sets up your web servers for the deployment of web_static
+# sets up your web servers for the deployment of web_static
 
-sudo apt-get update
-sudo apt-get -y install nginx
+USER="ubuntu"
+GROUP="ubuntu"
 
-mkdir -p /data/
-mkdir -p /data/web_static/
-mkdir -p /data/web_static/releases/
-mkdir -p /data/web_static/shared/
-mkdir -p /data/web_static/releases/test/
+# Install Nginx if not already installed
+if ! command -v nginx &> /dev/null; then
+  echo "Installing Nginx..."
+  sudo apt update && sudo apt install -y nginx
+fi
 
-echo "<html><head></head><body>Nginx config test page</body></html>"
+# Create data directory with ownership
+sudo mkdir -p /data && sudo chown -R ${USER}:${GROUP} /data
 
-rm -rf /data/web_static/current
-sudo ln -rs /data/web_static/releases/test/ /data/web_static/current
+# Create subdirectories within data
+for dir in web_static releases/test releases shared; do
+  sudo mkdir -p "/data/$dir" && sudo chown -R ${USER}:${GROUP} "/data/$dir"
+done
 
-sudo chown -R ubuntu:ubuntu /data/
+# Create a fake HTML file
+echo "<h1>hbnb Static Content</h1>" | sudo tee /data/web_static/releases/test/index.html
 
-conf_file="/etc/nginx/sites-available/default"
-sudo sed -i '/^\s*location \/static\/ {/a \\talias /data/web_static/current/;' "$conf_file"
+# Update symbolic link
+sudo rm -f /data/web_static/current && sudo ln -s /data/web_static/releases/test /data/web_static/current
 
-sudo service restart nginx
+# Update Nginx configuration
+sudo cat <<EOF > /etc/nginx/sites-available/hbnb_static.conf
+server {
+  listen 80;
+  server_name localhost;
+
+  location /hbnb_static/ {
+    alias /data/web_static/current/;
+    index index.html index.htm;
+  }
+}
+EOF
+
+# Enable the new configuration and restart Nginx
+sudo ln -s /etc/nginx/sites-available/hbnb_static.conf /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+
+echo "Web server setup complete!"
