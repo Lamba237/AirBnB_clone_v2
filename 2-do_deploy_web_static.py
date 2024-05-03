@@ -6,7 +6,8 @@ from fabric.api import env, put, run, sudo
 from os.path import exists
 
 
-env.hosts = ['xx-web-01', 'xx-web-02']
+env.hosts = ['18.233.63.243', '35.168.7.222']
+env.uer = 'ubuntu'
 
 
 def do_pack():
@@ -39,7 +40,6 @@ def do_deploy(archive_path):
 
     try:
         put(archive_path, '/tmp/')
-
         run('mkdir -p {}'.format(releasePath))
         run('tar -xzf /tmp/{} -C {}'.format(fileName, releasePath))
         run('rm /tmp/{}'.format(fileName))
