@@ -9,6 +9,22 @@ from os.path import exists
 env.hosts = ['xx-web-01', 'xx-web-02']
 
 
+def do_pack():
+
+    """
+    this function is use to generate a .tgz file
+    """
+    try:
+        local('mkdir -p versions')
+        archive_path = 'versions/web_static_{}.tgz'.format(
+            datetime.now().strftime('%Y%m%d%H%M%S'))
+        local('tar -cvzf {} web_static'.format(archive_path))
+        print('web_static packed: {} -> {}'.format(archive_path,
+              os.path.getsize(archive_path)))
+    except:
+        return None
+
+
 def do_deploy(archive_path):
     """
     Fabric script that distributes an archive
