@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# this bash script is use to
 # Prepare web server for deployment
 apt-get -y update
 apt-get -y install nginx
@@ -8,7 +9,7 @@ echo "<html>
   <head>
   </head>
   <body>
-    Holberton School
+    Testing my servers
   </body>
 </html>" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
