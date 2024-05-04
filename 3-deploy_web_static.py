@@ -11,6 +11,18 @@ env.hosts = ['18.233.63.243', '35.168.7.222']
 env.uer = 'ubuntu'
 
 
+def deploy():
+    """
+    creates and distribute an archive to my web server
+    """
+
+    created_archive = do_pack()
+    if not created_archive:
+        return False
+
+    return do_deploy(created_archive)
+
+
 def do_pack():
 
     """
@@ -52,15 +64,3 @@ def do_deploy(archive_path):
         return True
     except Exception:
         return False
-
-
-def deploy():
-    """
-    creates and distribute an archive to my web server
-    """
-
-    created_archive = do_pack()
-    if not created_archive:
-        return False
-
-    return do_deploy(created_archive)
