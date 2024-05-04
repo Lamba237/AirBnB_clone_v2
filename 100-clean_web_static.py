@@ -11,6 +11,21 @@ env.hosts = ['18.233.63.243', '35.168.7.222']
 env.uer = 'ubuntu'
 
 
+def do_clean(number=0):
+    ''' Removes out of date archives locally and remotely '''
+    number = int(number)
+    if number == 0:
+        number = 2
+    else:
+        number += 1
+
+    local('cd versions; ls -t | tail -n +{} | xargs rm -rf'
+          .format(number))
+    releases_path = '/data/web_static/releases'
+    run('cd {}; ls -t | tail -n +{} | xargs rm -rf'
+        .format(releases_path, number))
+
+
 def do_pack():
 
     """
@@ -53,7 +68,6 @@ def do_deploy(archive_path):
     except:
         return False
 
-
 def deploy():
     """
     creates and distribute an archive to my web server
@@ -64,18 +78,3 @@ def deploy():
         return False
 
     return do_deploy(created_archive)
-
-
-def do_clean(number=0):
-    ''' Removes out of date archives locally and remotely '''
-    number = int(number)
-    if number == 0:
-        number = 2
-    else:
-        number += 1
-
-    local('cd versions; ls -t | tail -n +{} | xargs rm -rf'
-          .format(number))
-    releases_path = '/data/web_static/releases'
-    run('cd {}; ls -t | tail -n +{} | xargs rm -rf'
-        .format(releases_path, number))
