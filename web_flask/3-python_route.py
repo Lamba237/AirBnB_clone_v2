@@ -24,9 +24,9 @@ def hello_c(text):
     return f'C {escape(text)}'
 
 
-@app.route('/pthon/', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def hello_python():
+def hello_python(text):
     """ This function generates the /python route """
     text = text.replace('_', ' ')
     return f'Python {escape(text)}'
