@@ -1,5 +1,4 @@
-#!/bin/bash
-# This script prepares a MySQL server for the project by creating a database and a user with specific privileges.
+-- This script prepares a MySQL server for the project by creating a database and a user with specific privileges.
 
 mysql -u root -p <<EOF
 -- Create the database hbnb_dev_db if it doesn't already exist
