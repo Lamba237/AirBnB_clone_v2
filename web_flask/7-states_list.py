@@ -1,25 +1,21 @@
-#!/usr/bin/python3
-""" Starts a Flask web app """
-from flask import Flask, render_template
+#!/usr/bin/pthon3
+""" returns list of states """
+from flask import Flask
+from flask import render_template
 from models import storage
-from models.state import State
 
 app = Flask(__name__)
-app.url_map.strict_slashes = False
 
+@app.route('/states_list', strict_slashes=False)
+def states_list():
+    """ returns list of states """
+    states = storage.all('State')
+    return render_template('7-states_list.html', states=states)
 
 @app.teardown_appcontext
-def dispose(exception):
-    """ Remove current session """
+def teardown_db(exception):
+    """ closes the storage """
     storage.close()
-
-
-@app.route('/states_list')
-def states():
-    """ Display list of all the states """
-    states = storage.all(State)
-    states_list = list(states.values())
-    return render_template('7-states_list.html', states=states_list)
 
 
 if __name__ == '__main__':
