@@ -1,4 +1,4 @@
-#!/usr/bin/pthon3
+#!/usr/bin/python3
 """ returns list of states """
 from flask import Flask
 from flask import render_template
